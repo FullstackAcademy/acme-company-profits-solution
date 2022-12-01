@@ -1,10 +1,7 @@
 <html>
   <head>
     <title>Acme Company Profits</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
+    <script src="dist/main.js" defer></script>
     <style>
       main {
         display: flex;
@@ -13,88 +10,5 @@
   </head>
   <body>
     <div id='app'></div>
-    <script type='text/babel'>
-      //https://www.acme-api.com/api/companies
-      //https://www.acme-api.com/api/companies/:id/companyProfits
-      const BASE_URL = 'https://www.acme-api.com/api'; 
-      const COMPANIES_URL = `${BASE_URL}/companies`;
-
-
-      const Companies = ({ companies })=> {
-        return (
-            <ul>
-              {
-                companies.map( company => {
-                  return (
-                    <li>
-                      <a href={`#${company.id}`}>
-                        { company.name }
-                      </a>
-                    </li>
-                  );
-                })
-              }
-            </ul>
-        );
-      }
-
-      const Profits = ({ profits })=> {
-        return (
-          <ul>
-            {
-              profits.map( profit => {
-                return (
-                  <li>
-                    { profit.amount }
-                  </li>
-                );
-              })
-            }
-          </ul>
-        );
-      };
-
-      const App = () => {
-        const { useState, useEffect } = React;
-        const [companies, setCompanies] = useState([]);
-        const [profits, setProfits ] = useState([]);
-
-        const loadCompanies = async()=> {
-          const response = await fetch(COMPANIES_URL);
-          const json = await response.json();
-          setCompanies(json);
-        }
-
-        const loadProfits = async()=> {
-          const id = window.location.hash.slice(1);
-          if(!id){
-            setProfits([]);
-          }
-          else {
-            const response = await fetch(`${COMPANIES_URL}/${id}/companyProfits`)
-            const json = await response.json();
-            setProfits(json);
-          }
-        }
-
-        useEffect(()=> {
-          loadCompanies();
-          window.addEventListener('hashchange', loadProfits)
-          loadProfits();
-        }, []);
-        return (
-          <div>
-            <h1><a href='#'>Acme Companies ({ companies.length })</a></h1>
-            <main>
-              <Companies companies={ companies } />
-              <Profits profits={ profits }/>
-            </main>
-          </div>
-        );
-      }
-
-      let root = ReactDOM.createRoot(document.querySelector('#app'));
-      root.render(<App />);
-    </script>
   </body>
 </html>
